@@ -92,12 +92,20 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   }
   .logo{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:600; font-size:18px; letter-spacing:0.2px;}
   .logo-mark{
-    width:30px; height:30px; border-radius:9px;
-    background: var(--grad);
+    width:32px; height:32px; border-radius:50%;
+    background: #0b0d14; border: 1px solid rgba(73,224,209,0.4);
     display:flex; align-items:center; justify-content:center;
-    font-size:11px; font-weight:700; color:#06070b; letter-spacing:-0.02em;
-    box-shadow: 0 0 22px rgba(138,125,255,0.5);
+    box-shadow: 0 0 18px rgba(73,224,209,0.45);
   }
+  .logo-mark svg{ width:16px; height:16px; }
+  .hero-mark{
+    width:64px; height:64px; border-radius:50%; margin:0 auto 22px;
+    background: #0b0d14; border: 1px solid rgba(73,224,209,0.4);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 0 32px rgba(73,224,209,0.5);
+    opacity:0; animation: rise 0.7s ease forwards;
+  }
+  .hero-mark svg{ width:30px; height:30px; }
   nav.links{ display:flex; gap:34px; font-size:14px; color: var(--muted); }
   nav.links a:hover{ color: var(--text); }
   .nav-actions{ display:flex; align-items:center; gap:14px; }
@@ -495,7 +503,7 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
 <div class="grain"></div>
 
 <header>
-  <div class="logo"><span class="logo-mark">IN</span>Instain</div>
+  <div class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#49e0d1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 6"/><polyline points="15 6 21 6 21 12"/></svg></span>Instain</div>
   <nav class="links">
     <a href="#platforms">Platforms</a>
     <a href="#dashboard">Dashboard</a>
@@ -530,14 +538,9 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     <div class="float-cube cube-3"></div>
   </div>
   <div class="wrap">
+    <div class="hero-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#49e0d1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 6"/><polyline points="15 6 21 6 21 12"/></svg></div>
     <div class="hero-brand">INSTAIN</div>
-    <div class="eyebrow"><span class="dot-live"></span> THE SOCIAL GROWTH AUTOPILOT · V2</div>
-    <h1 class="display">
-      <span class="line l1">One engine.</span>
-      <span class="line l2">Six platforms.</span>
-      <span class="line l3"><span class="grad-text">Zero manual work.</span></span>
-    </h1>
-    <p class="sub">One dashboard. Six platforms. Growth that runs itself.</p>
+    <p class="sub">Social media growth services. Trusted, fast, and secure.</p>
     <div class="hero-cta">
       <a href="https://instain.in/" class="btn btn-order btn-lg">Order Now →</a>
     </div>
@@ -555,51 +558,45 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   <div class="wrap">
     <div class="section-head reveal">
       <div class="kicker">Platforms</div>
-      <h2 class="section-title">Every <span class="grad-text">feed, one autopilot.</span></h2>
-      <p>Six growth engines, running in parallel.</p>
+      <h2 class="section-title">Every <span class="grad-text">feed, better content.</span></h2>
+      <p>Content help across six platforms.</p>
     </div>
     <div class="platform-grid">
-      <div class="p-card reveal" style="--fill:82%">
+      <div class="p-card reveal">
         <div class="p-icon" style="background:rgba(225,48,108,0.15); color:#ff6fa5;">📸</div>
-        <span class="tag">Growth Engine</span>
+        <span class="tag">Content Ideas</span>
         <h3>Instagram</h3>
-        <p>Audience growth and reel visibility.</p>
-        <div class="bar"><span></span></div>
+        <p>Post and reel ideas that fit your niche.</p>
       </div>
-      <div class="p-card reveal" style="--fill:74%">
+      <div class="p-card reveal">
         <div class="p-icon" style="background:rgba(255,0,0,0.13); color:#ff5c5c;">▶️</div>
-        <span class="tag">Watch-Time AI</span>
+        <span class="tag">Video Planning</span>
         <h3>YouTube</h3>
-        <p>Channel growth and steady watch time.</p>
-        <div class="bar"><span></span></div>
+        <p>Scripts, structure and editing tips.</p>
       </div>
-      <div class="p-card reveal" style="--fill:91%">
+      <div class="p-card reveal">
         <div class="p-icon" style="background:rgba(0,0,0,0.3); color:#fff;">🎵</div>
-        <span class="tag">Viral Layer</span>
+        <span class="tag">Trend Guidance</span>
         <h3>TikTok</h3>
-        <p>Early visibility, timed right.</p>
-        <div class="bar"><span></span></div>
+        <p>Formats and hooks that fit current trends.</p>
       </div>
-      <div class="p-card reveal" style="--fill:66%">
+      <div class="p-card reveal">
         <div class="p-icon" style="background:rgba(24,119,242,0.15); color:#5b9dff;">📘</div>
-        <span class="tag">Page Autopilot</span>
+        <span class="tag">Page Content</span>
         <h3>Facebook</h3>
-        <p>Page follows and steady post engagement.</p>
-        <div class="bar"><span></span></div>
+        <p>Post ideas that keep your page active.</p>
       </div>
-      <div class="p-card reveal" style="--fill:70%">
+      <div class="p-card reveal">
         <div class="p-icon" style="background:rgba(29,161,242,0.15); color:#6bd0ff;">🐦</div>
-        <span class="tag">Signal Boost</span>
+        <span class="tag">Post Ideas</span>
         <h3>X / Twitter</h3>
-        <p>Audience growth that builds momentum.</p>
-        <div class="bar"><span></span></div>
+        <p>Threads and posts worth writing.</p>
       </div>
-      <div class="p-card reveal" style="--fill:58%">
+      <div class="p-card reveal">
         <div class="p-icon" style="background:rgba(10,102,194,0.15); color:#63b3ff;">💼</div>
-        <span class="tag">Authority Engine</span>
+        <span class="tag">Thought Leadership</span>
         <h3>LinkedIn</h3>
-        <p>Audience growth for founders.</p>
-        <div class="bar"><span></span></div>
+        <p>Posts that build your professional voice.</p>
       </div>
     </div>
   </div>
@@ -609,8 +606,8 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   <div class="wrap">
     <div class="section-head reveal">
       <div class="kicker">Command Center</div>
-      <h2 class="section-title">See the <span class="grad-text">autopilot think.</span></h2>
-      <p>Every order, refill and insight, in one place.</p>
+      <h2 class="section-title">See your <span class="grad-text">content plan.</span></h2>
+      <p>Every idea, draft and insight, in one place.</p>
     </div>
     <div class="dash-wrap reveal">
       <div class="dash-top">
@@ -669,17 +666,17 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
         <div class="dash-right">
           <div class="feed-card">
             <div class="feed-head"><span class="dot-live"></span> LIVE ACTIVITY</div>
-            <div class="feed-item"><b>Instagram</b> — new growth delivered<span class="feed-time">just now</span></div>
-            <div class="feed-item"><b>Facebook</b> — page engagement queued<span class="feed-time">4m ago</span></div>
-            <div class="feed-item"><b>YouTube</b> — channel growth added<span class="feed-time">9m ago</span></div>
-            <div class="feed-item"><b>TikTok</b> — visibility boost queued<span class="feed-time">14m ago</span></div>
-            <div class="feed-item">Refill triggered on a recent order<span class="feed-time">22m ago</span></div>
+            <div class="feed-item"><b>Instagram</b> — new content idea ready<span class="feed-time">just now</span></div>
+            <div class="feed-item"><b>Facebook</b> — post draft queued<span class="feed-time">4m ago</span></div>
+            <div class="feed-item"><b>YouTube</b> — video script added<span class="feed-time">9m ago</span></div>
+            <div class="feed-item"><b>TikTok</b> — trend idea queued<span class="feed-time">14m ago</span></div>
+            <div class="feed-item">Reminder set for a recent draft<span class="feed-time">22m ago</span></div>
           </div>
 
           <div class="insight-card">
-            <div class="i-head">🔔 AI Insight</div>
-            <p>Your Instagram Reels engagement is up this week. Autopilot recommends doubling posting cadence on Tuesday mornings.</p>
-            <a href="#" class="btn">Apply recommendation</a>
+            <div class="i-head">🔔 Content Insight</div>
+            <p>Your Instagram Reels are performing well this week. Consider posting more consistently on Tuesday mornings.</p>
+            <a href="#" class="btn">See suggestion</a>
           </div>
         </div>
       </div>
@@ -691,14 +688,14 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   <div class="wrap">
     <div class="section-head reveal">
       <div class="kicker">Second Brain</div>
-      <h2 class="section-title">Never miss a signal, <span class="grad-text">ever again.</span></h2>
-      <p>Every order and milestone, captured and searchable.</p>
+      <h2 class="section-title">Never miss an idea, <span class="grad-text">ever again.</span></h2>
+      <p>Every idea and draft, captured and searchable.</p>
     </div>
     <div class="timeline reveal">
-      <div class="t-item"><span class="t-time">09:04</span><span class="t-tag tag-order">Order</span><span class="t-text">Instagram audience growth delivered ahead of schedule.</span></div>
+      <div class="t-item"><span class="t-time">09:04</span><span class="t-tag tag-order">Idea</span><span class="t-text">New Instagram content idea saved ahead of schedule.</span></div>
       <div class="t-item"><span class="t-time">10:31</span><span class="t-tag tag-insight">Insight</span><span class="t-text">Reel posted in the evening outperformed the weekly average.</span></div>
-      <div class="t-item"><span class="t-time">12:12</span><span class="t-tag tag-refill">Refill</span><span class="t-text">Auto-refill triggered on a recent order.</span></div>
-      <div class="t-item"><span class="t-time">14:47</span><span class="t-tag tag-order">Signal</span><span class="t-text">YouTube channel crossed a new audience milestone.</span></div>
+      <div class="t-item"><span class="t-time">12:12</span><span class="t-tag tag-refill">Reminder</span><span class="t-text">Follow-up set on a recent draft.</span></div>
+      <div class="t-item"><span class="t-time">14:47</span><span class="t-tag tag-order">Milestone</span><span class="t-text">YouTube channel hit a new content milestone.</span></div>
     </div>
   </div>
 </section>
@@ -707,7 +704,7 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <div class="logo"><span class="logo-mark">IN</span>Instain</div>
+        <div class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#49e0d1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 6"/><polyline points="15 6 21 6 21 12"/></svg></span>Instain</div>
         <p class="desc">The autopilot growth engine for creators and founders.</p>
       </div>
       <div class="foot-col">
