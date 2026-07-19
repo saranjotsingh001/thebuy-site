@@ -36,6 +36,12 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
 <meta name="twitter:image" content="https://instain.in/og-image.png">
 
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#12b8ac">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Instain">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -212,6 +218,16 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     .hero-cta{ flex-direction:column; align-items:center; }
     .btn-order, .btn-download{ width:100%; max-width:320px; justify-content:center; }
   }
+
+  .apk-toast{
+    position: fixed; left:50%; bottom:28px; transform: translateX(-50%) translateY(20px);
+    max-width: 90%; width: 380px;
+    background: var(--text); color:#fff; font-size:14px; line-height:1.5;
+    padding:14px 18px; border-radius:14px; box-shadow: 0 12px 32px rgba(20,22,31,0.3);
+    opacity:0; pointer-events:none; transition: opacity .25s ease, transform .25s ease;
+    z-index: 999;
+  }
+  .apk-toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
 
   /* hero background — soft aurora glow + dot grid + floating content cards */
   .aurora-bg{
@@ -616,13 +632,15 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     <p class="sub">Social media growth services. Trusted, fast, and secure.</p>
     <div class="hero-cta">
       <a href="https://instain.in/" class="btn btn-order btn-lg">Order Now →</a>
-      <a href="https://instain.in/downloads/instain.apk" download class="btn btn-download btn-lg">
+      <a href="#" id="installBtn" class="btn btn-download btn-lg">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-        Download App
+        <span id="installBtnLabel">Download App</span>
       </a>
     </div>
   </div>
 </section>
+
+<div id="apkToast" class="apk-toast"></div>
 
 <div class="stats wrap" style="max-width:100%; padding:0;">
   <div class="stat"><div class="num" data-count="3.8" data-suffix="M+">0</div><div class="label">Audience Growth Delivered</div></div>
@@ -923,6 +941,101 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     render();
     restartAuto();
   })();
+
+  // ---- PWA install system (same behavior as the instain.in profile install) ----
+  (function(){
+    const installBtn = document.getElementById('installBtn');
+    const installLabel = document.getElementById('installBtnLabel');
+    const toastEl = document.getElementById('apkToast');
+    if(!installBtn) return;
+
+    let deferredPrompt = null;
+
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+
+    function markInstalled(){
+      installLabel.textContent = 'Open App';
+      installBtn.classList.add('is-installed');
+    }
+
+    if (isStandalone) markInstalled();
+
+    function _apkToast(msg){
+      if(!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastEl._t);
+      toastEl._t = setTimeout(()=> toastEl.classList.remove('show'), 5000);
+    }
+
+    // Chrome/Edge/Android: capture the native install event instead of letting it fire the mini-infobar
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    function getInstallId(){
+      try {
+        let id = localStorage.getItem('instain_install_id');
+        if (!id) {
+          id = (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(36).slice(2)));
+          localStorage.setItem('instain_install_id', id);
+        }
+        return id;
+      } catch (e) {
+        return null; // private browsing / storage blocked - server falls back to IP-based dedupe
+      }
+    }
+
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      markInstalled();
+      // fires only on a real, completed install - this is what makes the count genuine,
+      // not a button click, page view, or apk download
+      fetch('/api/track-install', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ installId: getInstallId(), ts: Date.now() })
+      }).catch(()=>{});
+    });
+
+    async function installApp(){
+      if (isStandalone) return; // already running as installed app, nothing to do
+
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        try {
+          await deferredPrompt.userChoice;
+        } catch (err) {}
+        deferredPrompt = null;
+        return;
+      }
+
+      // no native prompt available (already used this visit, cooldown, or unsupported browser)
+      _apkToast(
+        isIOS
+          ? 'Tap Share ⬆️ then "Add to Home Screen" — installs the full app'
+          : isMobile
+            ? 'Open menu ⋮ then "Add to Home screen" — installs the full app'
+            : 'Look for the install icon ⊕ in your address bar, or use menu ⋮'
+      );
+    }
+
+    installBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      installApp();
+    });
+  })();
+
+  // register the service worker so updates roll out automatically to installed users
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
 </script>
 </body>
 </html>
