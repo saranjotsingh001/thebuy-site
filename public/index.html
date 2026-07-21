@@ -1018,25 +1018,13 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
         }).catch(()=>{});
       } catch (e) {}
 
-      // thebuy.site is itself installable as "Instain" (see manifest.json), so fire
-      // the native install dialog directly instead of redirecting to another origin -
-      // a browser will never let one site trigger another site's install prompt.
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log('Install prompt outcome:', outcome);
-        deferredPrompt = null;
-        return;
-      }
-
-      // Fallback: no captured prompt available (iOS Safari, already dismissed this
-      // session, or criteria not yet met). iOS has no install API, so guide manually.
-      if (isIOS) {
-        _apkToast('Tap Share, then "Add to Home Screen" to install.');
-        return;
-      }
-
-      // Last resort for other browsers/situations: send to instain.in as before.
+      // IMPORTANT: this must always go to instain.in - it is the real app with
+      // real account/order data. thebuy.site must NOT install itself here, even
+      // though its own manifest is also named "Instain" (that manifest exists for
+      // other reasons, not to serve as a substitute install target).
+      // instain.in has its own auto-install script that reads ?autoinstall=1 and
+      // fires the native prompt the instant it loads - see its <script> near the
+      // end of instain.in's index.html.
       window.location.href = `${INSTAIN_URL}/?source=thebuy&autoinstall=1`;
     }
 
