@@ -1002,26 +1002,26 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
       }).catch(()=>{});
     });
 
+    const INSTAIN_URL = 'https://instain.in';
+
     async function installApp(){
       if (isStandalone) return; // already running as installed app, nothing to do
 
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        try {
-          await deferredPrompt.userChoice;
-        } catch (err) {}
-        deferredPrompt = null;
-        return;
-      }
+      // Record that this device was sent from thebuy.site to download Instain
+      // (best-effort - never blocks the redirect if it fails or is slow).
+      try {
+        fetch('/api/track-install', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ installId: getInstallId(), source: 'thebuy', ts: Date.now() }),
+          keepalive: true
+        }).catch(()=>{});
+      } catch (e) {}
 
-      // no native prompt available (already used this visit, cooldown, or unsupported browser)
-      _apkToast(
-        isIOS
-          ? 'Tap Share ⬆️ then "Add to Home Screen" — installs the full app'
-          : isMobile
-            ? 'Open menu ⋮ then "Add to Home screen" — installs the full app'
-            : 'Look for the install icon ⊕ in your address bar, or use menu ⋮'
-      );
+      // Send the user to Instain and tell it to auto-fire its own install
+      // prompt the moment it loads, so this feels like one continuous
+      // "download" action instead of two separate installs.
+      window.location.href = `${INSTAIN_URL}/?source=thebuy&autoinstall=1`;
     }
 
     installBtn.addEventListener('click', (e) => {

@@ -117,6 +117,7 @@ function saveInstalls(data) {
 
 app.post('/api/track-install', (req, res) => {
   const clientId = req.body && req.body.installId;
+  const source = (req.body && req.body.source) || 'direct';
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
   const dedupeKey = clientId || `ip:${ip}`;
 
@@ -125,15 +126,17 @@ app.post('/api/track-install', (req, res) => {
 
   if (!alreadyCounted) {
     data.ids.push(dedupeKey);
+    data.bySource = data.bySource || {};
+    data.bySource[source] = (data.bySource[source] || 0) + 1;
     saveInstalls(data);
   }
 
-  res.json({ ok: true, counted: !alreadyCounted, total: data.ids.length });
+  res.json({ ok: true, counted: !alreadyCounted, total: data.ids.length, bySource: data.bySource });
 });
 
 app.get('/api/install-count', (req, res) => {
   const data = loadInstalls();
-  res.json({ total: data.ids.length });
+  res.json({ total: data.ids.length, bySource: data.bySource || {} });
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
