@@ -40,6 +40,7 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
 <meta name="theme-color" content="#12b8ac">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Instain">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1007,8 +1008,7 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     async function installApp(){
       if (isStandalone) return; // already running as installed app, nothing to do
 
-      // Record that this device was sent from thebuy.site to download Instain
-      // (best-effort - never blocks the redirect if it fails or is slow).
+      // Record that this device requested the install (best-effort, never blocks).
       try {
         fetch('/api/track-install', {
           method: 'POST',
@@ -1018,9 +1018,25 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
         }).catch(()=>{});
       } catch (e) {}
 
-      // Send the user to Instain and tell it to auto-fire its own install
-      // prompt the moment it loads, so this feels like one continuous
-      // "download" action instead of two separate installs.
+      // thebuy.site is itself installable as "Instain" (see manifest.json), so fire
+      // the native install dialog directly instead of redirecting to another origin -
+      // a browser will never let one site trigger another site's install prompt.
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log('Install prompt outcome:', outcome);
+        deferredPrompt = null;
+        return;
+      }
+
+      // Fallback: no captured prompt available (iOS Safari, already dismissed this
+      // session, or criteria not yet met). iOS has no install API, so guide manually.
+      if (isIOS) {
+        _apkToast('Tap Share, then "Add to Home Screen" to install.');
+        return;
+      }
+
+      // Last resort for other browsers/situations: send to instain.in as before.
       window.location.href = `${INSTAIN_URL}/?source=thebuy&autoinstall=1`;
     }
 
