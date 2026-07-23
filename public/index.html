@@ -1035,6 +1035,62 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     restartAuto();
   })();
 
+  // ---- click tracking: local counter on thebuy.site + reported to instain.in's admin panel ----
+  const INSTAIN_ADMIN_API = 'https://instain.in';
+
+  // same device id used by the PWA install system below (shared localStorage key,
+  // so "this device clicked Order Now" and "this device tapped Download" and
+  // "this device completed a real install" can all be tied together later if needed)
+  function getSharedDeviceId(){
+    try {
+      let id = localStorage.getItem('instain_install_id');
+      if (!id) {
+        id = (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(36).slice(2)));
+        localStorage.setItem('instain_install_id', id);
+      }
+      return id;
+    } catch (e) {
+      return null; // private browsing / storage blocked
+    }
+  }
+
+  // Reports to instain.in's admin panel via the existing /api/install-track
+  // endpoint, using two new event names ('order_now_click', 'download_click')
+  // that are distinct from that endpoint's own view/requested/installed funnel —
+  // see instain.in's server.js for why they're kept separate.
+  function reportToInstainAdmin(event){
+    try {
+      fetch(`${INSTAIN_ADMIN_API}/api/install-track`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ installId: getSharedDeviceId(), event, source: 'thebuy', ts: Date.now() }),
+        keepalive: true,
+        mode: 'cors'
+      }).catch(()=>{}); // cross-origin + best-effort — never blocks the click
+    } catch(e) {}
+  }
+
+  function trackClick(type){
+    // 1. local counter on thebuy.site itself (kept for a quick sanity check)
+    try {
+      fetch('/api/track-click', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ type, page: window.location.pathname }),
+        keepalive: true // lets the request finish even if the page is already navigating away
+      }).catch(()=>{});
+    } catch(e) {}
+
+    // 2. report to instain.in so it shows up in the Instain admin panel
+    const eventMap = { order_now: 'order_now_click', download_click: 'download_click' };
+    if (eventMap[type]) reportToInstainAdmin(eventMap[type]);
+  }
+
+  // "Order Now" clicks — link navigates straight to instain.in, tracking just piggybacks on the click
+  document.querySelectorAll('.btn-order').forEach((btn) => {
+    btn.addEventListener('click', () => trackClick('order_now'));
+  });
+
   // ---- PWA install system (same behavior as the instain.in profile install) ----
   (function(){
     const installBtn = document.getElementById('installBtn');
@@ -1122,6 +1178,7 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
 
     installBtn.addEventListener('click', (e) => {
       e.preventDefault();
+      if(!isStandalone) trackClick('download_click'); // only counts genuine "download" attempts, not "Open App" taps
       installApp();
     });
   })();
