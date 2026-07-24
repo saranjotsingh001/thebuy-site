@@ -180,44 +180,71 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     opacity:0; animation: rise 0.8s ease forwards; animation-delay:0.48s;
   }
   .btn-lg{ padding:15px 28px; font-size:15px; border-radius:100px; }
-  .btn-order{
-    background: var(--grad); color:#06070b; border:none; font-weight:700;
-    padding:30px 68px; font-size:22px;
-    background-size:200% 100%;
-    animation: orderPulse 2.4s ease-in-out infinite, shift 6s ease-in-out infinite;
-  }
-  .btn-order:hover{ transform: translateY(-2px); }
-  @keyframes orderPulse{
-    0%,100%{ box-shadow: 0 0 0 0 rgba(73,224,209,0.45), 0 0 18px 2px rgba(138,125,255,0.35); }
-    50%{ box-shadow: 0 0 0 10px rgba(73,224,209,0), 0 0 34px 8px rgba(255,122,198,0.55); }
-  }
-
-  .btn-download{
+  .btn-order, .btn-download{
+    --btn-grad: linear-gradient(100deg, #6c5ce7 0%, #e0529e 100%);
     display:inline-flex; align-items:center; gap:10px;
-    padding:30px 40px; font-size:16px; font-weight:600;
-    color: var(--text); background: var(--panel);
-    border: 1.5px solid transparent;
-    background-clip: padding-box;
-    position: relative;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    padding:30px 46px; font-size:16px; font-weight:700;
+    color: #ffffff; background: var(--btn-grad);
+    border: none; position: relative; z-index:1;
+    box-shadow: 0 10px 26px rgba(224,82,158,0.32), 0 6px 16px rgba(108,92,231,0.24);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: btnGlowPulse 2.8s ease-in-out infinite;
   }
-  .btn-download::before{
-    content:''; position:absolute; inset:0; border-radius:inherit; padding:1.5px;
-    background: var(--grad);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
-    pointer-events:none;
+  @keyframes btnGlowPulse{
+    0%,100%{ box-shadow: 0 10px 26px rgba(224,82,158,0.32), 0 6px 16px rgba(108,92,231,0.24); }
+    50%{ box-shadow: 0 12px 32px rgba(224,82,158,0.46), 0 8px 20px rgba(108,92,231,0.32); }
   }
-  .btn-download svg{ color: var(--cyan); transition: transform 0.25s ease; }
-  .btn-download:hover{
-    transform: translateY(-2px);
-    background: var(--panel-2);
-    box-shadow: 0 10px 26px rgba(73,224,209,0.18), 0 4px 14px rgba(138,125,255,0.16);
+  .btn-download svg{ color: #ffffff; transition: transform 0.25s ease; }
+  .btn-order:hover, .btn-download:hover{
+    transform: translateY(-2px) scale(1.015);
+    box-shadow: 0 14px 34px rgba(224,82,158,0.5), 0 8px 20px rgba(108,92,231,0.36);
   }
   .btn-download:hover svg{ transform: translateY(2px); }
+
+  /* WhatsApp chat button, sits beside Order Now */
+  .btn-whatsapp{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:30px 40px; font-size:16px; font-weight:700; border-radius:100px;
+    background:#25D366; color:#0b3d20; border:none; position:relative;
+    box-shadow: 0 8px 26px rgba(37,211,102,0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .btn-whatsapp:hover{ transform: translateY(-2px) scale(1.015); box-shadow: 0 12px 32px rgba(37,211,102,0.5); }
+  .btn-whatsapp svg{ width:20px; height:20px; }
+  .cta-row{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+
+  /* Floating WhatsApp icon — fixed middle-left, floating + pulsing */
+  .wa-float{
+    position: fixed; top: 34%; left: 24px; z-index: 1000;
+    width: 64px; height: 64px; border-radius: 50%;
+    background:#25D366; display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 8px 22px rgba(37,211,102,0.45);
+    animation: waFloat 3s ease-in-out infinite, waPulse 2.4s ease-in-out infinite;
+    transition: box-shadow 0.2s ease;
+  }
+  .wa-float:hover{ box-shadow: 0 10px 28px rgba(37,211,102,0.6); }
+  .wa-float svg{ width:32px; height:32px; }
+  @keyframes waFloat{
+    0%,100%{ transform: translateY(-50%); }
+    50%{ transform: translateY(calc(-50% - 12px)); }
+  }
+  @keyframes waPulse{
+    0%,100%{ box-shadow: 0 8px 22px rgba(37,211,102,0.45); }
+    50%{ box-shadow: 0 8px 22px rgba(37,211,102,0.45), 0 0 0 8px rgba(37,211,102,0.16); }
+  }
+  @media (max-width:520px){
+    .wa-float{ width:54px; height:54px; }
+    .wa-float svg{ width:26px; height:26px; }
+  }
+
+  /* Download App gets extra room in the hero now that Order Now lives below */
+  .hero-cta .btn-download{ padding:40px 66px; font-size:21px; gap:14px; }
+  .hero-cta .btn-download svg{ width:22px; height:22px; }
+
   @media (max-width:520px){
     .hero-cta{ flex-direction:column; align-items:center; }
-    .btn-order, .btn-download{ width:100%; max-width:320px; justify-content:center; }
+    .btn-order, .btn-download, .btn-whatsapp{ width:100%; max-width:320px; justify-content:center; }
+    .cta-row{ flex-direction:column; align-items:center; }
   }
 
   .apk-toast{
@@ -587,13 +614,18 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     .cube-1, .cube-2, .cube-3{ animation-duration: 6s !important; animation-iteration-count: infinite !important; }
     .t-item::before{ animation-duration: 1.8s !important; animation-iteration-count: infinite !important; }
     .chart-card.glow::after, .chart-card.glow-pink::after{ animation-duration: 4s !important; animation-iteration-count: infinite !important; }
+    .wa-float{ animation-duration: 3s, 2.4s !important; animation-iteration-count: infinite, infinite !important; }
+    .btn-order, .btn-download{ animation-duration: 2.8s !important; animation-iteration-count: infinite !important; }
     .dot-live{ animation-duration: 1.6s !important; animation-iteration-count: infinite !important; }
-    .btn-order{ animation-duration: 2.4s, 6s !important; animation-iteration-count: infinite, infinite !important; }
     .hero-brand{ animation-duration: 0.7s, 6s !important; animation-iteration-count: 1, infinite !important; }
   }
 </style>
 </head>
 <body>
+
+<a href="https://wa.me/919262583415" target="_blank" rel="noopener" class="wa-float" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M17.6 6.32A8.86 8.86 0 0 0 12.02 3.5c-4.9 0-8.9 4-8.9 8.9 0 1.57.41 3.1 1.19 4.45L3 21l4.28-1.28a8.9 8.9 0 0 0 4.74 1.37h.01c4.9 0 8.9-4 8.9-8.9a8.86 8.86 0 0 0-2.83-6.87Zm-5.58 13.7h-.01a7.4 7.4 0 0 1-3.77-1.03l-.27-.16-2.8.84.84-2.73-.18-.28a7.4 7.4 0 0 1-1.14-3.96c0-4.09 3.33-7.42 7.43-7.42 1.98 0 3.85.78 5.25 2.18a7.36 7.36 0 0 1 2.17 5.25c0 4.1-3.33 7.31-7.52 7.31Zm4.07-5.47c-.22-.11-1.31-.65-1.51-.72-.2-.07-.35-.11-.5.11-.15.22-.57.72-.7.87-.13.15-.26.16-.48.05-.22-.11-.94-.35-1.79-1.11a6.7 6.7 0 0 1-1.24-1.55c-.13-.22-.01-.34.1-.45.1-.1.22-.26.33-.39.11-.13.15-.22.22-.37.07-.15.04-.28-.02-.39-.06-.11-.5-1.22-.69-1.66-.18-.44-.37-.38-.5-.38-.13 0-.28-.02-.43-.02-.15 0-.39.06-.6.28-.2.22-.79.78-.79 1.9s.81 2.2.92 2.35c.11.15 1.6 2.53 3.9 3.44.55.24.97.38 1.3.48.55.17 1.04.15 1.44.09.44-.07 1.31-.54 1.49-1.06.18-.52.18-.96.13-1.06-.05-.1-.2-.16-.42-.27Z"/></svg>
+</a>
 
 <div class="bg-glow"></div>
 <div class="grain"></div>
@@ -601,7 +633,6 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
 <header>
   <div class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#49e0d1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 6"/><polyline points="15 6 21 6 21 12"/></svg></span>Instain</div>
   <nav class="links">
-    <a href="#platforms">Platforms</a>
     <a href="#dashboard">Dashboard</a>
     <a href="#features">Features</a>
     <a href="#pricing">Plans</a>
@@ -654,7 +685,6 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     <div class="hero-brand">INSTAIN</div>
     <p class="sub">Social media growth services. Trusted, fast, and secure.</p>
     <div class="hero-cta">
-      <a href="https://instain.in/" class="btn btn-order btn-lg">Order Now →</a>
       <a href="#" id="installBtn" class="btn btn-download btn-lg">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
         <span id="installBtnLabel">Download App</span>
@@ -668,7 +698,7 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
 <div class="stats wrap" style="max-width:100%; padding:0;">
   <div class="stat"><div class="num" data-count="3.8" data-suffix="M+">0</div><div class="label">Audience Growth Delivered</div></div>
   <div class="stat"><div class="num" data-count="6" data-suffix="">0</div><div class="label">Platforms Covered</div></div>
-  <div class="stat"><div class="num" data-count="18" data-suffix="h">0</div><div class="label">Avg. Delivery Time</div></div>
+  <div class="stat"><div class="num" data-count="10" data-suffix=" min">0</div><div class="label">Avg. Delivery Time</div></div>
   <div class="stat"><div class="num" data-count="99.6" data-suffix="%">0</div><div class="label">Uptime This Month</div></div>
 </div>
 
@@ -737,54 +767,6 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   </div>
 </section>
 
-<section class="section" id="platforms">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="kicker">Platforms</div>
-      <h2 class="section-title">Every <span class="grad-text">feed, better content.</span></h2>
-      <p>Content help across six platforms.</p>
-    </div>
-    <div class="platform-grid">
-      <div class="p-card reveal">
-        <div class="p-icon" style="background:rgba(225,48,108,0.15); color:#ff6fa5;">📸</div>
-        <span class="tag">Content Ideas</span>
-        <h3>Instagram</h3>
-        <p>Post and reel ideas that fit your niche.</p>
-      </div>
-      <div class="p-card reveal">
-        <div class="p-icon" style="background:rgba(255,0,0,0.13); color:#ff5c5c;">▶️</div>
-        <span class="tag">Video Planning</span>
-        <h3>YouTube</h3>
-        <p>Scripts, structure and editing tips.</p>
-      </div>
-      <div class="p-card reveal">
-        <div class="p-icon" style="background:rgba(0,0,0,0.3); color:#fff;">🎵</div>
-        <span class="tag">Trend Guidance</span>
-        <h3>TikTok</h3>
-        <p>Formats and hooks that fit current trends.</p>
-      </div>
-      <div class="p-card reveal">
-        <div class="p-icon" style="background:rgba(24,119,242,0.15); color:#5b9dff;">📘</div>
-        <span class="tag">Page Content</span>
-        <h3>Facebook</h3>
-        <p>Post ideas that keep your page active.</p>
-      </div>
-      <div class="p-card reveal">
-        <div class="p-icon" style="background:rgba(29,161,242,0.15); color:#6bd0ff;">🐦</div>
-        <span class="tag">Post Ideas</span>
-        <h3>X / Twitter</h3>
-        <p>Threads and posts worth writing.</p>
-      </div>
-      <div class="p-card reveal">
-        <div class="p-icon" style="background:rgba(10,102,194,0.15); color:#63b3ff;">💼</div>
-        <span class="tag">Thought Leadership</span>
-        <h3>LinkedIn</h3>
-        <p>Posts that build your professional voice.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="section" id="dashboard">
   <div class="wrap">
     <div class="section-head reveal">
@@ -848,7 +830,6 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
 
         <div class="dash-right">
           <div class="feed-card">
-            <div class="feed-head"><span class="dot-live"></span> LIVE ACTIVITY</div>
             <div class="feed-item"><b>Instagram</b> — new content idea ready<span class="feed-time">just now</span></div>
             <div class="feed-item"><b>Facebook</b> — post draft queued<span class="feed-time">4m ago</span></div>
             <div class="feed-item"><b>YouTube</b> — video script added<span class="feed-time">9m ago</span></div>
@@ -867,18 +848,14 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   </div>
 </section>
 
-<section class="section">
+<section class="section cta" style="text-align:center;">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="kicker">Second Brain</div>
-      <h2 class="section-title">Never miss an idea, <span class="grad-text">ever again.</span></h2>
-      <p>Every idea and draft, captured and searchable.</p>
-    </div>
-    <div class="timeline reveal">
-      <div class="t-item"><span class="t-time">09:04</span><span class="t-tag tag-order">Idea</span><span class="t-text">New Instagram content idea saved ahead of schedule.</span></div>
-      <div class="t-item"><span class="t-time">10:31</span><span class="t-tag tag-insight">Insight</span><span class="t-text">Reel posted in the evening outperformed the weekly average.</span></div>
-      <div class="t-item"><span class="t-time">12:12</span><span class="t-tag tag-refill">Reminder</span><span class="t-text">Follow-up set on a recent draft.</span></div>
-      <div class="t-item"><span class="t-time">14:47</span><span class="t-tag tag-order">Milestone</span><span class="t-text">YouTube channel hit a new content milestone.</span></div>
+    <div class="cta-row">
+      <a href="https://instain.in/" class="btn btn-order btn-lg">Order Now →</a>
+      <a href="https://wa.me/919262583415" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A8.86 8.86 0 0 0 12.02 3.5c-4.9 0-8.9 4-8.9 8.9 0 1.57.41 3.1 1.19 4.45L3 21l4.28-1.28a8.9 8.9 0 0 0 4.74 1.37h.01c4.9 0 8.9-4 8.9-8.9a8.86 8.86 0 0 0-2.83-6.87Zm-5.58 13.7h-.01a7.4 7.4 0 0 1-3.77-1.03l-.27-.16-2.8.84.84-2.73-.18-.28a7.4 7.4 0 0 1-1.14-3.96c0-4.09 3.33-7.42 7.43-7.42 1.98 0 3.85.78 5.25 2.18a7.36 7.36 0 0 1 2.17 5.25c0 4.1-3.33 7.31-7.52 7.31Zm4.07-5.47c-.22-.11-1.31-.65-1.51-.72-.2-.07-.35-.11-.5.11-.15.22-.57.72-.7.87-.13.15-.26.16-.48.05-.22-.11-.94-.35-1.79-1.11a6.7 6.7 0 0 1-1.24-1.55c-.13-.22-.01-.34.1-.45.1-.1.22-.26.33-.39.11-.13.15-.22.22-.37.07-.15.04-.28-.02-.39-.06-.11-.5-1.22-.69-1.66-.18-.44-.37-.38-.5-.38-.13 0-.28-.02-.43-.02-.15 0-.39.06-.6.28-.2.22-.79.78-.79 1.9s.81 2.2.92 2.35c.11.15 1.6 2.53 3.9 3.44.55.24.97.38 1.3.48.55.17 1.04.15 1.44.09.44-.07 1.31-.54 1.49-1.06.18-.52.18-.96.13-1.06-.05-.1-.2-.16-.42-.27Z"/></svg>
+        Chat on WhatsApp
+      </a>
     </div>
   </div>
 </section>
@@ -892,7 +869,6 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
       </div>
       <div class="foot-col">
         <h5>Product</h5>
-        <a href="#platforms">Platforms</a>
         <a href="#features">Features</a>
         <a href="#dashboard">Dashboard</a>
         <a href="#pricing">Plans</a>
