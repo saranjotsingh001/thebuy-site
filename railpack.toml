@@ -1,0 +1,19 @@
+provider = "node"
+
+[phases.install]
+# There is no committed package-lock.json for this project, so `npm ci`
+# cannot be used on its own (it requires an existing lockfile). We first
+# generate a lockfile without touching node_modules, then run `npm ci`
+# against it. This keeps installs fast and deterministic and avoids the
+# slow, occasionally hanging dependency resolution that `npm install`
+# performs on every build.
+cmds = [
+  "npm install --package-lock-only --no-audit --no-fund --prefer-offline",
+  "npm ci --prefer-offline --no-audit --no-fund"
+]
+
+[phases.build]
+cmds = []
+
+[start]
+cmd = "npm start"
