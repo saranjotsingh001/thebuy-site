@@ -251,7 +251,6 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   .wa-float-pill svg{ width:18px; height:18px; }
   @media (max-width:960px){
     .wa-float{ display:none; }
-    .dl-btn-wrap{ display:flex; flex-direction:column; align-items:center; gap:40px; width:100%; max-width:320px; }
     .wa-float-pill{
       position:static; width:100%; max-width:320px; justify-content:center;
       animation: waPulse 2.4s ease-in-out infinite;
@@ -267,6 +266,9 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
 
   /* Hand-drawn arrow pointing at Download App */
   .dl-btn-wrap{ position:relative; display:inline-block; }
+  @media (max-width:960px){
+    .dl-btn-wrap{ display:flex; flex-direction:column; align-items:center; gap:40px; width:100%; max-width:320px; }
+  }
   .dl-arrow{
     position:absolute; top:16px; left:-98px; width:92px; height:60px;
     pointer-events:none; animation: dlArrowFloat 2.6s ease-in-out infinite;
