@@ -249,7 +249,13 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
   }
   .wa-float-pill:hover{ box-shadow: 0 10px 28px rgba(37,211,102,0.6); }
   .wa-float-pill svg{ width:18px; height:18px; }
-  @media (max-width:960px){ .wa-float-pill{ display:none; } }
+  @media (max-width:960px){
+    .dl-btn-wrap{ display:flex; flex-direction:column; align-items:center; gap:14px; width:100%; max-width:320px; }
+    .wa-float-pill{
+      position:static; width:100%; max-width:320px; justify-content:center;
+      animation: waPulse 2.4s ease-in-out infinite;
+    }
+  }
 
   /* Download App gets extra room in the hero now that Order Now lives below */
   .hero-cta .btn-download{ padding:40px 66px; font-size:21px; gap:14px; }
