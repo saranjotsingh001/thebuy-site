@@ -1087,9 +1087,16 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     } catch(e) {}
 
     // 2. report to instain.in so it shows up in the Instain admin panel
-    const eventMap = { order_now: 'order_now_click', download_click: 'download_click' };
+    const eventMap = { order_now: 'order_now_click', download_click: 'download_click', whatsapp_click: 'whatsapp_click' };
     if (eventMap[type]) reportToInstainAdmin(eventMap[type]);
   }
+
+  // "Chat on WhatsApp" clicks — both the floating icon button and the hero
+  // pill link straight out to wa.me, tracking just piggybacks on the click
+  // the same way "Order Now" does (no preventDefault, never blocks the tap).
+  document.querySelectorAll('.wa-float, .wa-float-pill').forEach((btn) => {
+    btn.addEventListener('click', () => trackClick('whatsapp_click'));
+  });
 
   // "Order Now" clicks — link navigates straight to instain.in, tracking just piggybacks on the click
   document.querySelectorAll('.btn-order').forEach((btn) => {

@@ -115,6 +115,65 @@ function saveInstalls(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
+// ---- click tracking (Order Now / Download App / Chat on WhatsApp) ----
+// NOTE: the frontend (index.html) has always called POST /api/track-click,
+// but this route didn't exist yet, so every one of those calls was silently
+// 404ing (wrapped in .catch(()=>{}) client-side, so nothing ever surfaced
+// the failure). This is what actually implements it, so thebuy.site now
+// has its own real, verifiable counts — independent of whatever instain.in's
+// admin panel separately reports via the cross-origin /api/install-track call.
+const CLICKS_FILE = path.join(__dirname, 'data', 'clicks.json');
+const RECENT_CLICKS_CAP = 500; // keep the log bounded; totals below are unaffected by this cap
+
+function loadClicks() {
+  try {
+    return JSON.parse(fs.readFileSync(CLICKS_FILE, 'utf8'));
+  } catch (e) {
+    return { byType: {}, byTypeToday: {}, todayDate: '', recent: [] };
+  }
+}
+
+function saveClicks(data) {
+  fs.mkdirSync(path.dirname(CLICKS_FILE), { recursive: true });
+  fs.writeFileSync(CLICKS_FILE, JSON.stringify(data, null, 2));
+}
+
+function todayIST() {
+  // Matches the IST day boundary the instain.in admin panel already uses
+  // elsewhere, so "today" here means the same calendar day there.
+  const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+  return new Date(Date.now() + IST_OFFSET_MS).toISOString().slice(0, 10);
+}
+
+app.post('/api/track-click', (req, res) => {
+  const type = (req.body && req.body.type) || 'unknown';
+  const page = (req.body && req.body.page) || '/';
+  const today = todayIST();
+
+  const data = loadClicks();
+  if (data.todayDate !== today) { data.byTypeToday = {}; data.todayDate = today; }
+
+  data.byType = data.byType || {};
+  data.byType[type] = (data.byType[type] || 0) + 1;
+  data.byTypeToday[type] = (data.byTypeToday[type] || 0) + 1;
+
+  data.recent = data.recent || [];
+  data.recent.unshift({ type, page, ts: Date.now() });
+  if (data.recent.length > RECENT_CLICKS_CAP) data.recent.length = RECENT_CLICKS_CAP;
+
+  saveClicks(data);
+  res.json({ ok: true, total: data.byType[type], today: data.byTypeToday[type] });
+});
+
+// Real click counts straight from thebuy.site itself — useful as a direct
+// check on the numbers shown in the instain.in admin panel's Growth Funnel.
+app.get('/api/click-stats', (req, res) => {
+  const data = loadClicks();
+  const today = todayIST();
+  const byTypeToday = data.todayDate === today ? (data.byTypeToday || {}) : {};
+  res.json({ byType: data.byType || {}, byTypeToday, recent: (data.recent || []).slice(0, 100) });
+});
+
 app.post('/api/track-install', (req, res) => {
   const clientId = req.body && req.body.installId;
   const source = (req.body && req.body.source) || 'direct';
