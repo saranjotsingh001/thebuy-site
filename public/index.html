@@ -283,6 +283,8 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
     .hero-cta{ flex-direction:column; align-items:center; }
     .btn-order, .btn-download, .btn-whatsapp{ width:100%; max-width:320px; justify-content:center; }
     .cta-row{ flex-direction:column; align-items:center; }
+    .hero-cta .btn-download{ padding:16px 28px; font-size:16px; gap:10px; }
+    .hero-cta .btn-download svg{ width:18px; height:18px; }
   }
 
   .apk-toast{
@@ -1177,7 +1179,7 @@ src="https://www.facebook.com/tr?id=1065311536065251&ev=PageView&noscript=1"
       // instain.in has its own auto-install script that reads ?autoinstall=1 and
       // fires the native prompt the instant it loads - see its <script> near the
       // end of instain.in's index.html.
-      window.location.href = `${INSTAIN_URL}/install/?source=thebuy&autoinstall=1`;
+      window.location.href = `${INSTAIN_URL}/install/`;
     }
 
     installBtn.addEventListener('click', (e) => {
